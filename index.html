@@ -1,0 +1,1628 @@
+<!doctype html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0a0d12">
+  <meta name="description" content="Registro personale di entrate, uscite, pausa pranzo e smart working.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230f766e'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='white' stroke-width='2.4'/%3E%3Cpath d='M16 11.5V16l3 2' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <title>Timbrature Smart</title>
+  <script>
+    (function () {
+      var theme = "dark";
+      try { theme = localStorage.getItem("timbrature-semplici-v1:theme") || "dark"; } catch (_) {}
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+/* =========================================================
+   Timbrature Smart — design system
+   ========================================================= */
+:root {
+  --font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius-sm: 9px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+
+  --bg: #f5f6f8;
+  --bg-glow: radial-gradient(1200px 500px at 10% -10%, rgba(15, 118, 110, .10), transparent 60%),
+             radial-gradient(900px 420px at 100% 0%, rgba(79, 70, 229, .07), transparent 60%);
+  --surface: #ffffff;
+  --surface-2: #f8f9fb;
+  --surface-3: #eef1f4;
+  --elevated: #ffffff;
+  --line: #e5e8ee;
+  --line-strong: #d3d8e0;
+  --text: #0c1320;
+  --text-2: #4f5a6b;
+  --text-3: #8791a1;
+
+  --accent: #0f766e;
+  --accent-hover: #0c625b;
+  --accent-soft: #e5f3f1;
+  --accent-ink: #0b5f58;
+  --on-accent: #ffffff;
+
+  --pos: #0f8a5f;  --pos-soft: #e6f5ee;
+  --neg: #d92d20;  --neg-soft: #fdecea;
+  --warn: #b45309; --warn-soft: #fdf2e0;
+  --info: #2563eb; --info-soft: #e8effd;
+
+  --t-office: #64748b;
+  --t-smart: #4f46e5;
+
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, .05);
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, .06), 0 1px 2px rgba(16, 24, 40, .04);
+  --shadow-md: 0 10px 28px -8px rgba(16, 24, 40, .16), 0 2px 6px rgba(16, 24, 40, .05);
+  --shadow-lg: 0 28px 70px -14px rgba(16, 24, 40, .3);
+  --focus: 0 0 0 3px rgba(15, 118, 110, .28);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0d12;
+  --bg-glow: radial-gradient(1100px 520px at 8% -12%, rgba(45, 212, 191, .10), transparent 60%),
+             radial-gradient(900px 420px at 100% -5%, rgba(99, 102, 241, .10), transparent 60%);
+  --surface: #11151c;
+  --surface-2: #151a22;
+  --surface-3: #1c222c;
+  --elevated: #151a23;
+  --line: #222935;
+  --line-strong: #2f3846;
+  --text: #eef1f6;
+  --text-2: #a4aebd;
+  --text-3: #6d7787;
+
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-soft: rgba(45, 212, 191, .12);
+  --accent-ink: #5eead4;
+  --on-accent: #042321;
+
+  --pos: #34d399;  --pos-soft: rgba(52, 211, 153, .12);
+  --neg: #f87171;  --neg-soft: rgba(248, 113, 113, .13);
+  --warn: #fbbf24; --warn-soft: rgba(251, 191, 36, .12);
+  --info: #60a5fa; --info-soft: rgba(96, 165, 250, .13);
+
+  --t-office: #94a3b8;
+  --t-smart: #818cf8;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .45);
+  --shadow-md: 0 12px 30px -8px rgba(0, 0, 0, .6);
+  --shadow-lg: 0 30px 80px -10px rgba(0, 0, 0, .75);
+  --focus: 0 0 0 3px rgba(45, 212, 191, .3);
+  color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { min-width: 320px; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg-glow), var(--bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv11", "ss01";
+}
+h1, h2, h3, p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+svg { flex-shrink: 0; }
+:where(button, input, select, a, [tabindex]):focus-visible { outline: none; box-shadow: var(--focus); }
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+kbd {
+  font-family: inherit; font-size: .68rem; font-weight: 600;
+  padding: .05rem .35rem; border-radius: 5px;
+  border: 1px solid var(--line-strong); border-bottom-width: 2px;
+  color: var(--text-3); background: var(--surface-2);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 40px; padding: 0 1rem;
+  border-radius: 10px; border: 1px solid transparent;
+  font-size: .875rem; font-weight: 600; letter-spacing: -.005em;
+  background: transparent;
+  transition: background .15s, border-color .15s, color .15s, transform .1s, filter .15s;
+  white-space: nowrap;
+}
+.btn svg { width: 16px; height: 16px; }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn.primary { background: var(--accent); color: var(--on-accent); box-shadow: var(--shadow-xs), inset 0 1px 0 rgba(255,255,255,.14); }
+.btn.primary:hover { background: var(--accent-hover); }
+.btn.ghost { background: var(--surface); border-color: var(--line-strong); }
+[data-theme="dark"] .btn.ghost { background: var(--surface-2); }
+.btn.ghost:hover { border-color: var(--text-3); background: var(--surface-3); }
+.btn.danger { color: var(--neg); padding: 0 .75rem; }
+.btn.danger:hover { background: var(--neg-soft); }
+
+.icon-button {
+  display: inline-grid; place-items: center;
+  width: 40px; height: 40px; padding: 0;
+  border: 0; border-radius: 10px; background: transparent;
+  color: var(--text-2);
+  transition: background .15s, color .15s;
+}
+.icon-button:hover { background: var(--surface-3); color: var(--text); }
+.icon-button svg { width: 18px; height: 18px; }
+
+.link-button {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .3rem .15rem; border: 0; border-radius: 6px; background: transparent;
+  color: var(--accent-ink); font-size: .82rem; font-weight: 600;
+}
+.link-button svg { width: 15px; height: 15px; }
+.link-button:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 3px; }
+.danger-link { color: var(--text-3); }
+.danger-link:hover { color: var(--neg); }
+.muted-link { color: var(--text-3); margin-left: auto; font-size: .78rem; }
+.muted-link:hover:not(:disabled) { color: var(--text); }
+button:disabled { cursor: not-allowed; opacity: .4; }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  width: min(1420px, calc(100% - 2rem)); margin: 0 auto;
+  padding: .7rem 0;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem;
+}
+.brand { display: flex; align-items: center; gap: .7rem; min-width: 0; }
+.brand-mark {
+  width: 36px; height: 36px; border-radius: 11px;
+  display: grid; place-items: center; color: #fff;
+  background: linear-gradient(145deg, #14b8a6, #0f766e 55%, #3730a3);
+  box-shadow: 0 6px 16px -6px rgba(15, 118, 110, .7), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.brand-mark svg { width: 20px; height: 20px; }
+.brand-name { display: block; font-size: 1rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+.brand-name em { font-style: normal; color: var(--accent-ink); }
+.brand-sub { display: block; font-size: .72rem; color: var(--text-3); font-weight: 500; }
+
+.month-switcher {
+  display: flex; align-items: center; gap: .15rem;
+  padding: .25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-xs);
+}
+.month-switcher .icon-button { width: 36px; height: 36px; }
+.month-label {
+  min-width: 11.5rem; height: 36px; padding: 0 .75rem;
+  border: 0; border-radius: 9px; background: transparent;
+  font-size: 1rem; font-weight: 700; letter-spacing: -.015em;
+  font-variant-numeric: tabular-nums;
+}
+.month-label:hover { background: var(--surface-3); }
+.top-actions { display: flex; justify-content: flex-end; align-items: center; gap: .45rem; }
+[data-theme="dark"] .icon-moon, [data-theme="light"] .icon-sun { display: none; }
+
+/* ---------- Layout ---------- */
+.shell { width: min(1420px, calc(100% - 2rem)); margin: 0 auto; padding: 1.5rem 0 2.25rem; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Summary ---------- */
+.summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.summary-card {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: 1.15rem 1.25rem 1.2rem;
+  min-height: 140px;
+}
+.summary-card::after {
+  content: ""; position: absolute; right: -40px; top: -40px;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c) 18%, transparent), transparent 70%);
+  pointer-events: none;
+}
+.summary-head { display: flex; align-items: center; gap: .55rem; margin-bottom: .7rem; }
+.summary-icon {
+  width: 30px; height: 30px; border-radius: 9px;
+  display: grid; place-items: center;
+  color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent);
+}
+.summary-icon svg { width: 16px; height: 16px; }
+.summary-label { font-size: .82rem; font-weight: 600; color: var(--text-2); }
+.summary-value {
+  display: block; font-size: 1.9rem; font-weight: 700; letter-spacing: -.035em; line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.summary-caption { display: block; margin-top: .3rem; font-size: .78rem; color: var(--text-3); }
+.meter { height: 6px; margin-top: .7rem; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+.meter span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--c); transition: width .4s var(--ease); }
+
+/* ---------- Calendar ---------- */
+.calendar { padding: 1.1rem 1.1rem 1.25rem; }
+.calendar-toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  padding: 0 .25rem 1rem;
+}
+.status { display: inline-flex; align-items: center; gap: .55rem; font-size: .86rem; font-weight: 600; color: var(--text-2); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pos); box-shadow: 0 0 0 4px color-mix(in srgb, var(--pos) 18%, transparent); }
+.status-dot[data-state="open"] { background: var(--warn); box-shadow: 0 0 0 4px color-mix(in srgb, var(--warn) 18%, transparent); }
+.status-dot[data-state="error"] { background: var(--neg); box-shadow: 0 0 0 4px color-mix(in srgb, var(--neg) 18%, transparent); }
+.toolbar-right { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.legend { display: flex; gap: 1rem; flex-wrap: wrap; }
+.legend span { display: inline-flex; align-items: center; gap: .4rem; font-size: .75rem; color: var(--text-3); font-weight: 500; }
+.legend i { width: 8px; height: 8px; border-radius: 3px; background: var(--c); }
+
+.weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .5rem; }
+.weekdays { margin-bottom: .35rem; }
+.weekdays span { padding: 0 .75rem; font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+.day-spacer { min-height: 0; }
+
+.day-card {
+  --t: transparent;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: stretch;
+  min-height: 150px; width: 100%;
+  padding: .7rem .75rem .8rem;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  transition: border-color .15s, box-shadow .2s var(--ease), transform .2s var(--ease), background .15s;
+}
+.day-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: var(--t); }
+.day-card:hover { transform: translateY(-2px); border-color: var(--line-strong); background: var(--surface); box-shadow: var(--shadow-md); z-index: 1; }
+[data-theme="dark"] .day-card:hover { background: var(--surface-3); }
+.day-card.is-office { --t: var(--t-office); }
+.day-card.is-smart { --t: var(--t-smart); background: color-mix(in srgb, var(--t-smart) 6%, var(--surface-2)); }
+.day-card.open { --t: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, var(--line)); }
+.day-card.invalid { --t: var(--neg); border-color: color-mix(in srgb, var(--neg) 55%, var(--line)); }
+.day-card.weekend:not([class*="is-"]) {
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 7px, color-mix(in srgb, var(--text-3) 7%, transparent) 7px 8px),
+    var(--surface-2);
+  border-style: dashed;
+}
+.day-card.weekend:not([class*="is-"]) .day-number { color: var(--text-3); font-weight: 600; }
+.day-card.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+.day-number { display: flex; justify-content: space-between; align-items: center; margin-bottom: .45rem; }
+.day-number > span:first-child {
+  min-width: 28px; height: 28px; padding: 0 .35rem;
+  display: inline-grid; place-items: center; border-radius: 8px;
+  font-size: .92rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.day-card.today .day-number > span:first-child { background: var(--accent); color: var(--on-accent); }
+.today-dot { font-size: .66rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-ink); }
+
+.day-empty { margin-top: auto; font-size: .74rem; color: var(--text-3); opacity: 0; transition: opacity .15s; }
+.day-card:hover .day-empty, .day-card:focus-visible .day-empty { opacity: 1; }
+.day-card.weekend .day-empty { display: none; }
+
+.day-badge {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: .35rem;
+  margin-bottom: .35rem; padding: .15rem .5rem .15rem .45rem;
+  border-radius: 999px;
+  font-size: .68rem; font-weight: 600;
+  color: var(--text-3);
+}
+.day-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--t-office); }
+.day-badge.smart { color: color-mix(in srgb, var(--t-smart) 80%, var(--text)); background: color-mix(in srgb, var(--t-smart) 13%, transparent); }
+.day-badge.smart::before { background: var(--t-smart); }
+
+.stamp-row { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; margin-top: .15rem; font-size: .76rem; color: var(--text-3); }
+.stamp-row strong { color: var(--text); font-weight: 600; font-size: .84rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stamp-row.lunch strong { font-weight: 500; font-size: .76rem; color: var(--text-2); }
+
+.day-result {
+  margin-top: auto; padding-top: .55rem;
+  font-size: .72rem; font-weight: 600; line-height: 1.45;
+}
+.stamp-row + .day-result, .day-badge + .stamp-row + .day-result { margin-top: .55rem; }
+.day-result.positive { color: var(--pos); }
+.day-result.negative, .negative { color: var(--neg); }
+.day-result.neutral, .neutral { color: var(--text-3); }
+.positive { color: var(--pos); }
+.open-text, .basket-text { color: var(--warn); }
+.note-line {
+  margin-top: .35rem; padding-top: .35rem;
+  border-top: 1px dashed var(--line);
+  color: var(--text-3); font-size: .7rem;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+
+/* ---------- Rules strip ---------- */
+.rules {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  margin-top: 1rem; overflow: hidden;
+  border: 1px solid var(--line); border-radius: var(--radius-lg);
+  background: var(--line);
+}
+.rules div { padding: 1rem 1.1rem; background: var(--surface); }
+.rules strong, .rules span { display: block; }
+.rules strong { font-size: .95rem; font-weight: 700; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.rules span { margin-top: .1rem; color: var(--text-3); font-size: .76rem; }
+
+/* ---------- Footer ---------- */
+.app-footer {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  margin-top: 1.5rem; padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: .78rem; color: var(--text-3);
+}
+.foot-note { display: flex; align-items: center; gap: .5rem; max-width: 72ch; }
+.foot-note svg { width: 15px; height: 15px; }
+.foot-note strong { color: var(--text-2); }
+.foot-right { display: flex; align-items: center; gap: 1rem; }
+.shortcuts { display: flex; align-items: center; gap: .35rem; }
+.version { font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; }
+
+/* ---------- Dialogs ---------- */
+dialog {
+  padding: 0; border: 1px solid var(--line);
+  color: var(--text); background: var(--elevated);
+  box-shadow: var(--shadow-lg);
+}
+dialog::backdrop { background: rgba(6, 9, 14, .5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+dialog[open] { animation: pop .22s var(--ease); }
+dialog[open]::backdrop { animation: fade .2s ease; }
+dialog form { display: flex; flex-direction: column; min-height: 100%; }
+
+dialog.modal {
+  width: min(560px, calc(100% - 2rem));
+  max-height: calc(100vh - 3rem);
+  border-radius: var(--radius-xl);
+  overflow: auto;
+}
+dialog.sheet {
+  margin: 0 0 0 auto;
+  width: min(560px, 100%);
+  height: 100%; max-height: 100%; max-width: 100%;
+  border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+  border-right: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+dialog.sheet[open] { animation: slideIn .28s var(--ease); }
+dialog.sheet form { min-height: 100%; }
+
+.dialog-header {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: 1.1rem 1.5rem;
+  background: color-mix(in srgb, var(--elevated) 88%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.eyebrow { font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+.dialog-header h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: -.02em; }
+#dialogTitle::first-letter { text-transform: uppercase; }
+.dialog-body { flex: 1; padding: 1.25rem 1.5rem; }
+
+.dialog-actions {
+  position: sticky; bottom: 0; z-index: 2;
+  display: flex; justify-content: space-between; align-items: center; gap: .75rem;
+  padding: .9rem 1.5rem calc(.9rem + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--elevated) 92%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+}
+.dialog-actions > div { display: flex; gap: .5rem; }
+.dialog-actions .btn.primary { min-width: 120px; }
+.smart-actions { justify-content: flex-end; }
+
+/* ---------- Form ---------- */
+label { display: block; color: var(--text-2); font-size: .76rem; font-weight: 600; }
+.optional { color: var(--text-3); font-size: .7rem; font-weight: 500; }
+input:not([type="checkbox"]), select {
+  display: block; width: 100%; min-height: 44px; margin-top: .4rem; padding: 0 .8rem;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text);
+  transition: border-color .15s, box-shadow .15s, opacity .15s;
+}
+[data-theme="dark"] input:not([type="checkbox"]), [data-theme="dark"] select { background: var(--surface-2); }
+input::placeholder { color: var(--text-3); }
+input:hover:not(:focus):not(:disabled) { border-color: var(--text-3); }
+input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+input[type="time"] { font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .5; }
+input:disabled { opacity: .55; cursor: not-allowed; }
+input[type="checkbox"] { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+
+.type-field > label { margin-bottom: .45rem; }
+.segmented {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .25rem;
+  padding: .25rem; border-radius: 12px;
+  background: var(--surface-3); border: 1px solid var(--line);
+}
+.segmented button {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 40px; border: 0; border-radius: 9px;
+  background: transparent; color: var(--text-2);
+  font-size: .88rem; font-weight: 600;
+  transition: background .15s, color .15s, box-shadow .15s;
+}
+.segmented button svg { width: 16px; height: 16px; }
+.segmented button:hover { color: var(--text); }
+.segmented button[aria-checked="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+[data-theme="dark"] .segmented button[aria-checked="true"] { background: var(--elevated); }
+.segmented button[data-type-choice="smart"][aria-checked="true"] { color: var(--t-smart); }
+.smart-hint { display: none; }
+form.is-smart .smart-hint { display: block; }
+
+.form-section {
+  margin-top: 1rem; padding: 1.1rem;
+  border: 1px solid var(--line); border-radius: var(--radius-lg);
+  background: var(--surface-2);
+}
+.form-section.compact { padding: 1rem 1.1rem; }
+.section-title { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+.section-title h3 { font-size: .92rem; font-weight: 700; letter-spacing: -.01em; }
+.section-icon { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-ink); }
+.section-icon svg { width: 16px; height: 16px; }
+form.is-smart .form-section:not(.compact) { opacity: .7; }
+
+.field-grid { display: grid; gap: .75rem; }
+.field-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.calculate-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: .75rem; flex-wrap: wrap; }
+.calculate-row > span { font-size: .82rem; font-weight: 700; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+.calculate-row > span:empty { display: none; }
+.hint { margin-top: .6rem; color: var(--text-3); font-size: .78rem; line-height: 1.45; }
+
+.presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: .4rem; margin-top: .75rem; }
+.presets button {
+  min-height: 34px; padding: 0 .4rem;
+  border: 1px solid var(--line-strong); border-radius: 9px;
+  background: var(--surface); color: var(--text-2);
+  font-size: .76rem; font-weight: 600; font-variant-numeric: tabular-nums;
+  transition: all .15s;
+}
+[data-theme="dark"] .presets button { background: var(--elevated); }
+.presets button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-ink); }
+
+.live-preview {
+  margin-top: 1rem; padding: .9rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  background: var(--accent-soft); color: var(--text);
+  font-size: .84rem; line-height: 1.5;
+}
+.error-box {
+  margin-bottom: 1rem; padding: .8rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--neg) 35%, transparent); border-radius: var(--radius);
+  background: var(--neg-soft); color: var(--neg);
+  font-size: .84rem; font-weight: 600; line-height: 1.5;
+}
+.error-box[hidden] { display: none; }
+
+/* Smart del mese */
+.smart-intro { color: var(--text-2); font-size: .88rem; line-height: 1.55; }
+.smart-intro strong { color: var(--text); }
+.weekday-choices { display: grid; grid-template-columns: repeat(5, 1fr); gap: .45rem; margin: 1.1rem 0 0; padding: 0; border: 0; min-width: 0; }
+.weekday-choices legend { margin-bottom: .55rem; padding: 0; color: var(--text-2); font-size: .76rem; font-weight: 600; }
+.weekday-choices label { position: relative; cursor: pointer; }
+.weekday-choices input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.weekday-choices span {
+  min-height: 48px; display: grid; place-items: center;
+  border: 1px solid var(--line-strong); border-radius: 11px;
+  background: var(--surface-2); color: var(--text-2);
+  font-size: .86rem; font-weight: 600;
+  transition: all .15s;
+}
+.weekday-choices span:hover { border-color: var(--text-3); }
+.weekday-choices input:checked + span {
+  border-color: var(--t-smart); color: var(--t-smart);
+  background: color-mix(in srgb, var(--t-smart) 12%, transparent);
+  box-shadow: inset 0 0 0 1px var(--t-smart);
+}
+.weekday-choices input:focus-visible + span { box-shadow: var(--focus); }
+.overwrite-choice {
+  display: flex; align-items: flex-start; gap: .7rem;
+  margin-top: 1rem; padding: .85rem 1rem;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface-2);
+  font-size: .84rem; font-weight: 500; line-height: 1.45; cursor: pointer;
+}
+.overwrite-choice input { margin-top: .1rem; }
+.smart-preview {
+  margin-top: 1rem; padding: .9rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--t-smart) 30%, transparent);
+  background: color-mix(in srgb, var(--t-smart) 9%, transparent);
+  font-size: .84rem; line-height: 1.5;
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; z-index: 50; left: 50%; bottom: 1.5rem;
+  max-width: calc(100% - 2rem);
+  padding: .75rem 1.1rem; border-radius: 12px;
+  background: var(--text); color: var(--bg);
+  font-size: .86rem; font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  transform: translate(-50%, 140%); opacity: 0;
+  transition: transform .3s var(--ease), opacity .2s;
+  pointer-events: none;
+}
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* ---------- Animations ---------- */
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes slideIn { from { opacity: .4; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .day-card { min-height: 132px; }
+  .legend { display: none; }
+}
+@media (max-width: 860px) {
+  .topbar-inner { grid-template-columns: 1fr auto; grid-template-areas: "brand actions" "month month"; row-gap: .6rem; }
+  .brand { grid-area: brand; }
+  .top-actions { grid-area: actions; }
+  .month-switcher { grid-area: month; justify-content: space-between; }
+  .month-label { flex: 1; min-width: 0; }
+  .shortcuts { display: none; }
+}
+@media (max-width: 720px) {
+  body { font-size: 15px; }
+  .brand-sub, .btn-label { display: none; }
+  .top-actions .btn { width: 40px; padding: 0; }
+  .shell { padding-top: 1rem; }
+  .summary-grid { gap: .6rem; }
+  .summary-card { min-height: 0; padding: .9rem 1rem 1rem; }
+  .summary-value { font-size: 1.45rem; }
+  .summary-caption { font-size: .72rem; }
+  .summary-head { margin-bottom: .5rem; }
+
+  .calendar { padding: 0; background: transparent; border: 0; box-shadow: none; }
+  .calendar-toolbar { padding: .5rem .1rem .75rem; }
+  .weekdays, .day-spacer { display: none; }
+  .calendar-grid { grid-template-columns: 1fr; gap: .45rem; }
+  .day-card {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    column-gap: .75rem; row-gap: .1rem;
+    min-height: 60px;
+    padding: .75rem .9rem .75rem 1rem;
+    background: var(--surface);
+  }
+  .day-card::before { inset: 0 auto 0 0; width: 3px; height: auto; }
+  .day-card > * { grid-column: 2; }
+  .day-card .day-badge { justify-self: start; }
+  .day-card .day-number {
+    grid-column: 1; grid-row: 1 / span 12; align-self: start;
+    flex-direction: column; align-items: flex-start; gap: .25rem; margin: 0;
+  }
+  .day-number > span:first-child { padding: 0; height: auto; font-size: 1.35rem; line-height: 1; background: none !important; }
+  .day-card.today .day-number > span:first-child { color: var(--accent-ink); }
+  .day-card .day-number::after {
+    content: attr(data-weekday);
+    font-size: .66rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3);
+  }
+  .day-card .today-dot { order: 3; }
+  .day-empty { opacity: 1; align-self: center; margin: 0; }
+  .day-card:hover { transform: none; }
+  .day-card.weekend:not([class*="is-"]) { min-height: 48px; }
+  .day-result { padding-top: .35rem; }
+
+  .rules { grid-template-columns: 1fr 1fr; }
+  .rules div { padding: .85rem 1rem; }
+
+  dialog.modal, dialog.sheet {
+    width: 100%; max-width: 100%; height: 100%; max-height: 100%;
+    margin: 0; border-radius: 0; border: 0;
+  }
+  .dialog-header { padding: .9rem 1.1rem; }
+  .dialog-body { padding: 1rem 1.1rem; }
+  .dialog-actions { padding-left: 1.1rem; padding-right: 1.1rem; }
+  .presets { grid-template-columns: repeat(2, 1fr); }
+  .weekday-choices { grid-template-columns: repeat(5, 1fr); }
+  .app-footer { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+@media print {
+  .topbar, .rules, .app-footer, .calendar-toolbar { display: none !important; }
+}
+
+/* =========================================================
+   GLASS LAYER — vetro, profondità e luce
+   ========================================================= */
+:root {
+  --glass: rgba(255, 255, 255, .62);
+  --glass-2: rgba(255, 255, 255, .45);
+  --glass-strong: rgba(255, 255, 255, .82);
+  --glass-border: rgba(255, 255, 255, .75);
+  --glass-edge: rgba(15, 23, 42, .08);
+  --glass-hi: inset 0 1px 0 rgba(255, 255, 255, .9);
+  --glass-blur: blur(22px) saturate(170%);
+  --glass-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 12px 32px -12px rgba(15, 23, 42, .14);
+  --aurora-1: rgba(20, 184, 166, .30);
+  --aurora-2: rgba(99, 102, 241, .22);
+  --aurora-3: rgba(56, 189, 248, .20);
+  --accent-grad: linear-gradient(135deg, #14b8a6 0%, #0e9f9a 45%, #0891b2 100%);
+  --accent-glow: 0 8px 24px -8px rgba(20, 184, 166, .65);
+}
+[data-theme="dark"] {
+  --glass: rgba(22, 28, 38, .55);
+  --glass-2: rgba(28, 35, 47, .42);
+  --glass-strong: rgba(18, 23, 32, .78);
+  --glass-border: rgba(255, 255, 255, .08);
+  --glass-edge: rgba(255, 255, 255, .06);
+  --glass-hi: inset 0 1px 0 rgba(255, 255, 255, .06);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 20px 50px -20px rgba(0, 0, 0, .7);
+  --aurora-1: rgba(45, 212, 191, .20);
+  --aurora-2: rgba(129, 140, 248, .18);
+  --aurora-3: rgba(56, 189, 248, .12);
+  --accent-grad: linear-gradient(135deg, #5eead4 0%, #2dd4bf 45%, #22d3ee 100%);
+  --accent-glow: 0 10px 30px -8px rgba(45, 212, 191, .55);
+}
+
+/* Aurora di sfondo */
+body { background: var(--bg) !important; }
+body::before, body::after {
+  content: ""; position: fixed; z-index: -1; pointer-events: none;
+  border-radius: 50%; filter: blur(80px);
+}
+body::before {
+  width: 62vw; height: 62vw; left: -18vw; top: -26vw;
+  background: radial-gradient(circle at 40% 40%, var(--aurora-1), transparent 65%);
+  animation: auroraA 26s ease-in-out infinite alternate;
+}
+body::after {
+  width: 55vw; height: 55vw; right: -16vw; top: 8vh;
+  background:
+    radial-gradient(circle at 60% 40%, var(--aurora-2), transparent 62%),
+    radial-gradient(circle at 30% 80%, var(--aurora-3), transparent 60%);
+  animation: auroraB 32s ease-in-out infinite alternate;
+}
+@keyframes auroraA { to { transform: translate(8vw, 6vh) scale(1.08); } }
+@keyframes auroraB { to { transform: translate(-10vw, 10vh) scale(.95); } }
+
+/* Pulsante primario luminoso */
+.glass-primary {
+  background: var(--accent-grad) !important;
+  color: var(--on-accent) !important;
+  border: 0 !important;
+  box-shadow: var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, .35) !important;
+}
+.glass-primary:hover:not(:disabled) { filter: brightness(1.06) saturate(1.1); transform: translateY(-1px); }
+
+/* Numeri con riflesso */
+.glass-number {
+  background: linear-gradient(180deg, var(--text) 35%, color-mix(in srgb, var(--text) 62%, transparent));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Alone colorato dietro le schede KPI */
+.glow-card { position: relative; isolation: isolate; }
+.glow-card::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  width: 220px; height: 220px; right: -70px; top: -90px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--glow, var(--accent)) 30%, transparent), transparent 68%);
+  filter: blur(6px);
+  transition: transform .5s var(--ease), opacity .3s;
+  opacity: .9;
+}
+.glow-card:hover::before { transform: scale(1.15) translate(-10px, 10px); opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) { body::before, body::after { animation: none; } }
+
+/* Superfici in vetro — Timbrature Smart */
+.card {
+  background: var(--glass) !important;
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow), var(--glass-hi) !important;
+}
+.summary-card { --glow: var(--c); border-radius: 20px; padding: 1.3rem 1.4rem; transition: transform .25s var(--ease); }
+.summary-card::after { display: none; }
+.summary-card:hover { transform: translateY(-2px); }
+.summary-value { font-size: 2.15rem; }
+.summary-icon { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 25%, transparent); }
+.meter { background: color-mix(in srgb, var(--text) 8%, transparent); }
+.meter span { background: linear-gradient(90deg, color-mix(in srgb, var(--c) 70%, transparent), var(--c)); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 60%, transparent); }
+
+.topbar {
+  background: color-mix(in srgb, var(--bg) 55%, transparent) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--glass-edge) !important;
+}
+.month-switcher { background: var(--glass-2); border-color: var(--glass-border); border-radius: 999px; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.month-switcher .icon-button, .month-label { border-radius: 999px; }
+.top-actions .btn, .top-actions .icon-button { border-radius: 999px; }
+.top-actions .btn.ghost { background: var(--glass-2); border-color: var(--glass-border); }
+.brand-mark { border-radius: 12px; box-shadow: var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.35); }
+
+.calendar { border-radius: 22px; padding: 1.25rem; }
+.day-card {
+  background: var(--glass-2) !important;
+  border: 1px solid var(--glass-edge) !important;
+  border-radius: 14px;
+  box-shadow: var(--glass-hi);
+}
+.day-card::before { left: 12px; right: 12px; height: 2px; border-radius: 0 0 2px 2px; }
+.day-card:hover {
+  background: var(--glass) !important;
+  border-color: color-mix(in srgb, var(--t, var(--accent)) 45%, var(--glass-border)) !important;
+  box-shadow: 0 16px 36px -16px color-mix(in srgb, var(--t, var(--accent)) 55%, transparent), var(--glass-hi) !important;
+}
+.day-card.is-smart { background: linear-gradient(160deg, color-mix(in srgb, var(--t-smart) 16%, transparent), var(--glass-2) 60%) !important; }
+.day-card.open { background: linear-gradient(160deg, color-mix(in srgb, var(--warn) 12%, transparent), var(--glass-2) 60%) !important; }
+.day-card.weekend:not([class*="is-"]) { background: transparent !important; border-style: dashed !important; box-shadow: none; }
+.day-card.today {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent) !important;
+  box-shadow: 0 0 0 1px var(--accent), 0 0 28px -6px color-mix(in srgb, var(--accent) 60%, transparent) !important;
+}
+.day-card.today .day-number > span:first-child { background: var(--accent-grad); box-shadow: var(--accent-glow); }
+
+.rules { background: var(--glass-edge); border-color: var(--glass-border); border-radius: 20px; -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); }
+.rules div { background: var(--glass-2); }
+
+dialog {
+  background: var(--glass-strong) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(180%); backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--shadow-lg), var(--glass-hi) !important;
+}
+dialog::backdrop { background: rgba(6, 9, 14, .35); -webkit-backdrop-filter: blur(10px) saturate(120%); backdrop-filter: blur(10px) saturate(120%); }
+dialog.modal { border-radius: 24px; }
+dialog.sheet { border-radius: 26px 0 0 26px; }
+.dialog-header, .dialog-actions { background: transparent !important; }
+.form-section { background: var(--glass-2); border-color: var(--glass-edge); border-radius: 18px; }
+.segmented { background: color-mix(in srgb, var(--text) 6%, transparent); border-color: var(--glass-edge); border-radius: 999px; }
+.segmented button { border-radius: 999px; }
+dialog input:not([type="checkbox"]), dialog select { background: color-mix(in srgb, var(--surface) 55%, transparent) !important; border-color: var(--glass-edge); }
+.presets button { border-radius: 999px; background: var(--glass) !important; }
+.live-preview, .smart-preview, .overwrite-choice { border-radius: 14px; }
+.weekday-choices span { border-radius: 14px; background: var(--glass-2); }
+.btn { border-radius: 12px; }
+.toast { border-radius: 999px; -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); background: color-mix(in srgb, var(--text) 88%, transparent); }
+
+@media (max-width: 720px) {
+  .calendar { padding: 0; background: transparent !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .day-card { background: var(--glass) !important; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+  .day-card::before { left: 0; right: auto; top: 12px; bottom: 12px; width: 3px; height: auto; border-radius: 0 3px 3px 0; }
+  dialog.modal, dialog.sheet { border-radius: 0; }
+  .summary-value { font-size: 1.5rem; }
+}
+
+/* =========================================================
+   COLORI v2 — leggibilità, significati univoci, famiglie
+   ========================================================= */
+:root {
+  --text-3: #6b7585;                 /* contrasto 4,7:1 su bianco */
+  --aurora-1: rgba(20, 184, 166, .19);
+  --aurora-2: rgba(99, 102, 241, .14);
+  --aurora-3: rgba(56, 189, 248, .12);
+}
+[data-theme="dark"] {
+  --text-3: #8a94a6;                 /* contrasto 5,7:1 su superficie scura */
+  --aurora-1: rgba(45, 212, 191, .13);
+  --aurora-2: rgba(129, 140, 248, .11);
+  --aurora-3: rgba(56, 189, 248, .07);
+}
+
+/* Mappa di calore del saldo giornaliero */
+[data-balance] { --heat-c: var(--pos); }
+[data-balance="neg"] { --heat-c: var(--neg); }
+[data-balance]::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(to top,
+    color-mix(in srgb, var(--heat-c) calc(var(--heat, .5) * 26%), transparent) 0%,
+    transparent 78%);
+}
+[data-balance] > *:not(.absolute):not(.note-indicator) { position: relative; z-index: 1; }
+[data-balance] > .note-indicator { z-index: 1; }
+.legend-heat { display: inline-flex; align-items: center; gap: .45rem; font-size: .74rem; color: var(--text-3); font-weight: 500; }
+.legend-heat i {
+  width: 34px; height: 8px; border-radius: 3px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--neg) 70%, transparent), transparent 50%, color-mix(in srgb, var(--pos) 70%, transparent));
+}
+/* Famiglie — Timbrature Smart */
+:root { --info: var(--accent); --info-soft: var(--accent-soft); --t-office: #64748b; --t-smart: #4f46e5; }
+[data-theme="dark"] { --info: var(--accent); --info-soft: var(--accent-soft); --t-office: #94a3b8; --t-smart: #818cf8; }
+.day-card[data-balance]::before { z-index: 2; }
+.legend { align-items: center; }
+
+  </style>
+</head>
+<body>
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+        </span>
+        <div>
+          <strong class="brand-name">Timbrature <em>Smart</em></strong>
+          <span class="brand-sub">Presenze personali</span>
+        </div>
+      </div>
+
+      <div class="month-switcher" role="group" aria-label="Selezione mese">
+        <button class="icon-button" id="prevMonth" type="button" aria-label="Mese precedente" title="Mese precedente (←)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button class="month-label" id="todayMonth" type="button" title="Torna al mese corrente (T)" aria-live="polite"></button>
+        <button class="icon-button" id="nextMonth" type="button" aria-label="Mese successivo" title="Mese successivo (→)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-button" id="themeToggle" type="button" aria-label="Attiva tema chiaro" title="Cambia tema">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="btn ghost" id="exportButton" type="button" title="Esporta il mese in CSV">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+          <span class="btn-label">Esporta CSV</span>
+        </button>
+        <button class="btn primary glass-primary" id="autoSmartButton" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/></svg>
+          <span class="btn-label">Smart del mese</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <!-- ============ RIEPILOGO ============ -->
+    <section class="summary-grid" aria-label="Riepilogo mensile">
+      <article class="card summary-card glow-card" style="--c: var(--pos)">
+        <div class="summary-head"><span class="summary-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span class="summary-label">Minuti in più</span></div>
+        <strong class="summary-value glass-number" id="balanceValue">0 min</strong>
+        <small class="summary-caption">Residuo ordinario del mese</small>
+      </article>
+      <article class="card summary-card glow-card" style="--c: var(--info)">
+        <div class="summary-head"><span class="summary-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg></span><span class="summary-label">Minuti extra</span></div>
+        <strong class="summary-value glass-number" id="extraValue">0 min</strong>
+        <small class="summary-caption" id="extraBlocks">0 blocchi da 15 min</small>
+      </article>
+      <article class="card summary-card glow-card" style="--c: var(--neg)">
+        <div class="summary-head"><span class="summary-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg></span><span class="summary-label">Minuti mancanti</span></div>
+        <strong class="summary-value glass-number" id="missingValue">0 min</strong>
+        <small class="summary-caption">Da sistemare o gestire in SAP</small>
+      </article>
+      <article class="card summary-card glow-card basket-card" style="--c: var(--warn)">
+        <div class="summary-head"><span class="summary-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22h14M5 2h14M17 22v-4.17a2 2 0 0 0-.59-1.42L12 12l-4.41 4.41A2 2 0 0 0 7 17.83V22M7 2v4.17a2 2 0 0 0 .59 1.42L12 12l4.41-4.41A2 2 0 0 0 17 6.17V2"/></svg></span><span class="summary-label">Basket ingresso</span></div>
+        <strong class="summary-value glass-number" id="basketValue">0 / 20 min</strong>
+        <div class="meter" aria-hidden="true"><span id="basketMeter"></span></div>
+        <small class="summary-caption" id="basketRemaining">20 min disponibili</small>
+      </article>
+    </section>
+
+    <!-- ============ CALENDARIO ============ -->
+    <section class="card calendar" aria-label="Calendario timbrature">
+      <div class="calendar-toolbar">
+        <div class="status" aria-live="polite">
+          <span class="status-dot" id="statusDot" aria-hidden="true"></span>
+          <span id="openDaysStatus">Nessuna giornata aperta</span>
+        </div>
+        <div class="toolbar-right">
+          <div class="legend" aria-hidden="true">
+            <span><i style="--c: var(--t-office)"></i>Ufficio</span>
+            <span><i style="--c: var(--t-smart)"></i>Smart working</span>
+            <span><i style="--c: var(--warn)"></i>Aperta</span>
+            <span class="legend-heat"><i></i>Saldo − / +</span>
+          </div>
+          <button class="link-button danger-link" id="resetMonth" type="button">Azzera il mese</button>
+        </div>
+      </div>
+      <div class="weekdays" aria-hidden="true">
+        <span>Lun</span><span>Mar</span><span>Mer</span><span>Gio</span><span>Ven</span><span>Sab</span><span>Dom</span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </section>
+
+    <!-- ============ REGOLE ============ -->
+    <section class="rules" aria-label="Regole applicate">
+      <div><strong>8 ore</strong><span>Presenza giornaliera</span></div>
+      <div><strong>45 min</strong><span>Pausa standard se non timbrata</span></div>
+      <div><strong>60 + 20 min</strong><span>Flessibilità ingresso + basket mensile</span></div>
+      <div><strong>15 min</strong><span>Blocco minimo dei minuti extra</span></div>
+    </section>
+
+    <footer class="app-footer">
+      <span class="foot-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <span><strong>Dati locali:</strong> salvati solo in questo browser. Il programma è un supporto personale e non sostituisce SAP.</span>
+      </span>
+      <span class="foot-right">
+        <span class="shortcuts"><kbd>←</kbd><kbd>→</kbd> mesi <kbd>T</kbd> oggi</span>
+        <span class="version">Versione 2026.11.23.4</span>
+      </span>
+    </footer>
+  </main>
+
+  <!-- ============ GIORNATA (pannello laterale) ============ -->
+  <dialog id="dayDialog" class="sheet" aria-labelledby="dialogTitle">
+    <form method="dialog" id="dayForm" novalidate>
+      <div class="dialog-header">
+        <div><p class="eyebrow">Giornata</p><h2 id="dialogTitle">Gestione timbrature</h2></div>
+        <button class="icon-button close" type="button" data-close-dialog aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="error-box" id="errorBox" role="alert" hidden></div>
+
+        <div class="type-field">
+          <label for="dayType">Tipo di giornata</label>
+          <div class="segmented" role="radiogroup" aria-label="Tipo di giornata">
+            <button type="button" role="radio" data-type-choice="office">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/></svg>
+              Ufficio
+            </button>
+            <button type="button" role="radio" data-type-choice="smart">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/></svg>
+              Smart working
+            </button>
+          </div>
+          <select id="dayType" name="type" class="visually-hidden" tabindex="-1" aria-hidden="true">
+            <option value="office">Ufficio</option>
+            <option value="smart">Smart working</option>
+          </select>
+          <p class="hint smart-hint">Lo smart working è sempre impostato automaticamente dalle 08:00 alle 16:45.</p>
+        </div>
+
+        <section class="form-section">
+          <div class="section-title">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <h3>Presenza</h3>
+          </div>
+          <div class="field-grid two">
+            <label>Entrata<input id="entryInput" name="entry" type="time" step="60"></label>
+            <label>Uscita finale <span class="optional">facoltativa</span><input id="exitInput" name="exit" type="time" step="60"></label>
+          </div>
+          <div class="calculate-row">
+            <button class="link-button" id="calculateExit" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 4 5 5M3 21l12-12M9 3v2M3 9h2M19 13v2M17 15h2"/></svg>
+              Calcola uscita per 8 ore
+            </button>
+            <span id="calculatedExit"></span>
+          </div>
+          <p class="hint">Puoi salvare anche solo l’entrata e completare la giornata più tardi.</p>
+        </section>
+
+        <section class="form-section">
+          <div class="section-title">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg></span>
+            <h3>Pausa pranzo</h3>
+            <button class="link-button muted-link" id="clearLunch" type="button">Nessuna timbratura</button>
+          </div>
+          <div class="field-grid two">
+            <label>Uscita pranzo<input id="lunchOutInput" name="lunchOut" type="time" step="60"></label>
+            <label>Rientro pranzo<input id="lunchInInput" name="lunchIn" type="time" step="60"></label>
+          </div>
+          <div class="presets" aria-label="Fasce pranzo rapide">
+            <button type="button" data-lunch="12:00,12:45">12:00–12:45</button>
+            <button type="button" data-lunch="12:30,13:15">12:30–13:15</button>
+            <button type="button" data-lunch="13:00,13:45">13:00–13:45</button>
+            <button type="button" data-lunch="13:30,14:15">13:30–14:15</button>
+          </div>
+          <p class="hint">Se lasci entrambi i campi vuoti, a giornata conclusa vengono conteggiati 45 minuti standard.</p>
+        </section>
+
+        <section class="form-section compact">
+          <label>Nota personale <span class="optional">facoltativa</span><input id="noteInput" name="note" type="text" maxlength="120" placeholder="Esempio: timbratura da controllare"></label>
+        </section>
+
+        <div class="live-preview" id="livePreview">Inserisci l’entrata per iniziare.</div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="btn danger" id="deleteDay" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+          Cancella
+        </button>
+        <div><button class="btn ghost" type="button" data-close-dialog>Annulla</button><button class="btn primary glass-primary" id="saveDay" type="submit">Salva</button></div>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ============ SMART DEL MESE ============ -->
+  <dialog id="smartMonthDialog" class="modal" aria-labelledby="smartMonthTitle">
+    <form method="dialog" id="smartMonthForm" novalidate>
+      <div class="dialog-header">
+        <div><p class="eyebrow">Programmazione rapida</p><h2 id="smartMonthTitle">Smart working del mese</h2></div>
+        <button class="icon-button close" type="button" data-close-dialog aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dialog-body">
+        <p class="smart-intro">Seleziona i giorni ricorrenti. Tutte le date corrispondenti verranno impostate automaticamente dalle <strong>08:00 alle 16:45</strong>.</p>
+        <div class="error-box" id="smartMonthError" role="alert" hidden></div>
+        <fieldset class="weekday-choices">
+          <legend>Giorni della settimana</legend>
+          <label><input type="checkbox" name="smartWeekday" value="1"><span>Lun</span></label>
+          <label><input type="checkbox" name="smartWeekday" value="2"><span>Mar</span></label>
+          <label><input type="checkbox" name="smartWeekday" value="3"><span>Mer</span></label>
+          <label><input type="checkbox" name="smartWeekday" value="4"><span>Gio</span></label>
+          <label><input type="checkbox" name="smartWeekday" value="5"><span>Ven</span></label>
+        </fieldset>
+        <label class="overwrite-choice"><input id="overwriteSmartMonth" type="checkbox"><span>Sostituisci anche le giornate già compilate nei giorni selezionati</span></label>
+        <div class="smart-preview" id="smartMonthPreview">Seleziona almeno un giorno.</div>
+      </div>
+      <div class="dialog-actions smart-actions">
+        <button class="btn ghost" type="button" data-close-dialog>Annulla</button>
+        <button class="btn primary glass-primary" id="applySmartMonth" type="submit">Inserisci nel mese</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+/* ---- core.js ---- */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === "object" && module.exports) module.exports = api;
+  root.SimpleTimeCore = api;
+})(typeof globalThis !== "undefined" ? globalThis : this, function () {
+  "use strict";
+
+  const RULES = Object.freeze({
+    ordinaryStart: 8 * 60,
+    ordinaryWork: 8 * 60,
+    standardLunch: 45,
+    dailyEntryFlex: 60,
+    monthlyEntryBasket: 20,
+    extraBlock: 15,
+  });
+
+  function parseTime(value) {
+    if (!value || !/^\d{2}:\d{2}$/.test(value)) return null;
+    const [hours, minutes] = value.split(":").map(Number);
+    if (hours > 23 || minutes > 59) return null;
+    return hours * 60 + minutes;
+  }
+
+  function formatMinutes(value) {
+    const minutes = Math.max(0, Math.round(Number(value) || 0));
+    const hours = Math.floor(minutes / 60);
+    const rest = minutes % 60;
+    if (!hours) return `${rest} min`;
+    if (!rest) return `${hours} h`;
+    return `${hours} h ${rest} min`;
+  }
+
+  function formatClock(totalMinutes) {
+    if (!Number.isFinite(totalMinutes)) return "--:--";
+    const normalized = ((Math.round(totalMinutes) % 1440) + 1440) % 1440;
+    return `${String(Math.floor(normalized / 60)).padStart(2, "0")}:${String(normalized % 60).padStart(2, "0")}`;
+  }
+
+  function evaluateDay(record) {
+    const type = record && record.type === "smart" ? "smart" : "office";
+    const clean = {
+      type,
+      entry: type === "smart" ? "08:00" : (record && record.entry ? String(record.entry) : ""),
+      lunchOut: type === "smart" ? "" : (record && record.lunchOut ? String(record.lunchOut) : ""),
+      lunchIn: type === "smart" ? "" : (record && record.lunchIn ? String(record.lunchIn) : ""),
+      exit: type === "smart" ? "16:45" : (record && record.exit ? String(record.exit) : ""),
+      note: record && record.note ? String(record.note).trim().slice(0, 120) : "",
+    };
+
+    const entry = parseTime(clean.entry);
+    const lunchOut = parseTime(clean.lunchOut);
+    const lunchIn = parseTime(clean.lunchIn);
+    const exit = parseTime(clean.exit);
+    const hasAny = type === "smart" || Boolean(clean.entry || clean.lunchOut || clean.lunchIn || clean.exit || clean.note);
+    const errors = [];
+
+    if (!hasAny) return { ...clean, hasAny: false, complete: false, valid: true, errors: [] };
+    if (entry === null) errors.push("Inserisci l'orario di entrata.");
+    if (clean.exit && exit === null) errors.push("L'orario di uscita non è valido.");
+    if (Boolean(clean.lunchOut) !== Boolean(clean.lunchIn)) errors.push("Inserisci entrambe le timbrature della pausa pranzo.");
+    if (clean.lunchOut && lunchOut === null) errors.push("L'uscita pranzo non è valida.");
+    if (clean.lunchIn && lunchIn === null) errors.push("Il rientro pranzo non è valido.");
+
+    if (entry !== null && exit !== null && exit <= entry) errors.push("L'uscita deve essere successiva all'entrata.");
+    if (lunchOut !== null && lunchIn !== null && lunchIn <= lunchOut) errors.push("Il rientro pranzo deve essere successivo all'uscita pranzo.");
+    if (entry !== null && lunchOut !== null && lunchOut <= entry) errors.push("L'uscita pranzo deve essere successiva all'entrata.");
+    if (exit !== null && lunchIn !== null && lunchIn >= exit) errors.push("Il rientro pranzo deve essere precedente all'uscita finale.");
+
+    const complete = entry !== null && exit !== null;
+    let lunchMinutes = null;
+    let lunchAssumed = false;
+    if (complete) {
+      if (lunchOut !== null && lunchIn !== null) lunchMinutes = lunchIn - lunchOut;
+      else {
+        lunchMinutes = RULES.standardLunch;
+        lunchAssumed = true;
+      }
+    }
+
+    const effectiveEntry = entry === null ? null : Math.max(entry, RULES.ordinaryStart);
+    const earlyEntryIgnored = entry === null ? 0 : Math.max(0, RULES.ordinaryStart - entry);
+    const worked = complete && errors.length === 0 ? exit - effectiveEntry - lunchMinutes : null;
+    if (worked !== null && worked < 0) errors.push("Gli orari inseriti non formano una giornata valida.");
+    const lateEntry = entry === null ? 0 : Math.max(0, entry - RULES.ordinaryStart);
+    const dailyFlexUsed = Math.min(lateEntry, RULES.dailyEntryFlex);
+    const basketRequested = Math.max(0, lateEntry - RULES.dailyEntryFlex);
+
+    return {
+      ...clean,
+      hasAny,
+      complete,
+      valid: errors.length === 0,
+      errors,
+      entryMinutes: entry,
+      effectiveEntryMinutes: effectiveEntry,
+      earlyEntryIgnored,
+      exitMinutes: exit,
+      lunchMinutes,
+      lunchAssumed,
+      workedMinutes: worked,
+      delta: worked === null || errors.length ? null : worked - RULES.ordinaryWork,
+      lateEntry,
+      dailyFlexUsed,
+      basketRequested,
+    };
+  }
+
+  function calculateMonth(records) {
+    const input = records || {};
+    const dates = Object.keys(input).sort();
+    const perDay = {};
+    let minutesInPiu = 0;
+    let missingMinutes = 0;
+    let extraMinutes = 0;
+    let basketRemaining = RULES.monthlyEntryBasket;
+    let openDays = 0;
+    let invalidDays = 0;
+
+    dates.forEach((date) => {
+      const day = evaluateDay(input[date]);
+      const basketUsed = day.valid ? Math.min(day.basketRequested || 0, basketRemaining) : 0;
+      basketRemaining -= basketUsed;
+      const overBasket = day.valid ? Math.max(0, (day.basketRequested || 0) - basketUsed) : 0;
+      let coveredMissing = 0;
+      let usedPositiveBalance = 0;
+      let addedExtra = 0;
+      let addedBalance = 0;
+      let addedMissing = 0;
+
+      if (!day.valid) invalidDays += 1;
+      else if (day.hasAny && !day.complete) openDays += 1;
+      else if (day.complete && day.delta < 0) {
+        const shortage = -day.delta;
+        usedPositiveBalance = Math.min(minutesInPiu, shortage);
+        minutesInPiu -= usedPositiveBalance;
+        addedMissing = shortage - usedPositiveBalance;
+        missingMinutes += addedMissing;
+      } else if (day.complete && day.delta > 0) {
+        coveredMissing = Math.min(missingMinutes, day.delta);
+        missingMinutes -= coveredMissing;
+        const available = day.delta - coveredMissing;
+        addedExtra = Math.floor(available / RULES.extraBlock) * RULES.extraBlock;
+        addedBalance = available - addedExtra;
+        extraMinutes += addedExtra;
+        minutesInPiu += addedBalance;
+      }
+
+      perDay[date] = {
+        ...day,
+        basketUsed,
+        overBasket,
+        coveredMissing,
+        usedPositiveBalance,
+        addedExtra,
+        addedBalance,
+        addedMissing,
+      };
+    });
+
+    return {
+      perDay,
+      minutesInPiu,
+      missingMinutes,
+      extraMinutes,
+      extraBlocks: extraMinutes / RULES.extraBlock,
+      basketUsed: RULES.monthlyEntryBasket - basketRemaining,
+      basketRemaining,
+      openDays,
+      invalidDays,
+    };
+  }
+
+  function calculateEightHourExit(record) {
+    const entry = parseTime(record && record.entry);
+    if (entry === null) return null;
+    const lunchOut = parseTime(record && record.lunchOut);
+    const lunchIn = parseTime(record && record.lunchIn);
+    let lunch = RULES.standardLunch;
+    if (lunchOut !== null && lunchIn !== null && lunchIn > lunchOut) lunch = lunchIn - lunchOut;
+    return formatClock(Math.max(entry, RULES.ordinaryStart) + RULES.ordinaryWork + lunch);
+  }
+
+  return { RULES, parseTime, formatMinutes, formatClock, evaluateDay, calculateMonth, calculateEightHourExit };
+});
+
+  </script>
+  <script>
+/* ---- app.js ---- */
+(function () {
+  "use strict";
+  const Core = window.SimpleTimeCore;
+  const STORAGE_PREFIX = "timbrature-semplici-v1:";
+  const SMART_PATTERN_KEY = "timbrature-semplici-v1:smart-weekdays";
+  const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+  const dayNames = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
+  let shown = new Date();
+  shown = new Date(shown.getFullYear(), shown.getMonth(), 1);
+  let activeDate = "";
+  let records = {};
+
+  const $ = (id) => document.getElementById(id);
+  const els = {
+    grid: $("calendarGrid"), month: $("todayMonth"), dialog: $("dayDialog"), form: $("dayForm"),
+    title: $("dialogTitle"), entry: $("entryInput"), exit: $("exitInput"), lunchOut: $("lunchOutInput"),
+    lunchIn: $("lunchInInput"), type: $("dayType"), note: $("noteInput"), error: $("errorBox"), preview: $("livePreview"),
+    delete: $("deleteDay"), calcText: $("calculatedExit"), toast: $("toast"), smartDialog: $("smartMonthDialog"),
+    smartForm: $("smartMonthForm"), smartError: $("smartMonthError"), smartPreview: $("smartMonthPreview")
+  };
+
+  function monthKey() { return `${shown.getFullYear()}-${String(shown.getMonth() + 1).padStart(2, "0")}`; }
+  function storageKey() { return STORAGE_PREFIX + monthKey(); }
+  function load() {
+    try { records = JSON.parse(localStorage.getItem(storageKey()) || "{}"); }
+    catch (_) { records = {}; }
+  }
+  function persist() { localStorage.setItem(storageKey(), JSON.stringify(records)); }
+  function isoDate(day) { return `${monthKey()}-${String(day).padStart(2, "0")}`; }
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+  }
+  function plural(value, one, many) { return `${value} ${value === 1 ? one : many}`; }
+  function showToast(message) {
+    els.toast.textContent = message;
+    els.toast.classList.add("show");
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => els.toast.classList.remove("show"), 2300);
+  }
+
+  function selectedSmartWeekdays() {
+    return [...document.querySelectorAll('input[name="smartWeekday"]:checked')].map((input) => Number(input.value));
+  }
+  function matchingSmartDates(weekdays) {
+    const matches = [];
+    const days = new Date(shown.getFullYear(), shown.getMonth() + 1, 0).getDate();
+    for (let day = 1; day <= days; day += 1) {
+      const date = new Date(shown.getFullYear(), shown.getMonth(), day);
+      if (weekdays.includes(date.getDay())) matches.push(isoDate(day));
+    }
+    return matches;
+  }
+  function updateSmartMonthPreview() {
+    const weekdays = selectedSmartWeekdays();
+    if (!weekdays.length) {
+      els.smartPreview.textContent = "Seleziona almeno un giorno.";
+      return;
+    }
+    const dates = matchingSmartDates(weekdays);
+    const occupied = dates.filter((date) => Boolean(records[date])).length;
+    const overwrite = $("overwriteSmartMonth").checked;
+    const applied = overwrite ? dates.length : dates.length - occupied;
+    const protectedText = occupied === 1 ? " 1 giornata già compilata sarà lasciata invariata." : ` ${occupied} giornate già compilate saranno lasciate invariate.`;
+    els.smartPreview.textContent = `${applied} giornate verranno impostate come Smart working in ${monthNames[shown.getMonth()]} ${shown.getFullYear()}.${!overwrite && occupied ? protectedText : ""}`;
+  }
+  function openSmartMonthDialog() {
+    $("smartMonthTitle").textContent = `Smart working · ${monthNames[shown.getMonth()]} ${shown.getFullYear()}`;
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem(SMART_PATTERN_KEY) || "[]"); } catch (_) { saved = []; }
+    document.querySelectorAll('input[name="smartWeekday"]').forEach((input) => { input.checked = saved.includes(Number(input.value)); });
+    $("overwriteSmartMonth").checked = false;
+    els.smartError.hidden = true;
+    updateSmartMonthPreview();
+    els.smartDialog.showModal();
+  }
+
+  function render() {
+    const year = shown.getFullYear();
+    const month = shown.getMonth();
+    els.month.textContent = `${monthNames[month]} ${year}`;
+    const result = Core.calculateMonth(records);
+    $("balanceValue").textContent = Core.formatMinutes(result.minutesInPiu);
+    $("extraValue").textContent = Core.formatMinutes(result.extraMinutes);
+    $("extraBlocks").textContent = plural(result.extraBlocks, "blocco da 15 min", "blocchi da 15 min");
+    $("missingValue").textContent = Core.formatMinutes(result.missingMinutes);
+    $("basketValue").textContent = `${result.basketUsed} / ${Core.RULES.monthlyEntryBasket} min`;
+    $("basketRemaining").textContent = `${result.basketRemaining} min disponibili`;
+    const basketMeter = $("basketMeter");
+    if (basketMeter) basketMeter.style.width = `${Math.min(100, (result.basketUsed / Core.RULES.monthlyEntryBasket) * 100)}%`;
+    const statuses = [];
+    if (result.openDays) statuses.push(plural(result.openDays, "giornata aperta", "giornate aperte"));
+    if (result.invalidDays) statuses.push(plural(result.invalidDays, "giornata da correggere", "giornate da correggere"));
+    $("openDaysStatus").textContent = statuses.length ? statuses.join(" · ") : "Tutte le giornate inserite sono complete";
+    const statusDot = $("statusDot");
+    if (statusDot) statusDot.dataset.state = result.invalidDays ? "error" : result.openDays ? "open" : "ok";
+
+    const first = new Date(year, month, 1);
+    const days = new Date(year, month + 1, 0).getDate();
+    const leading = (first.getDay() + 6) % 7;
+    const now = new Date();
+    let html = "";
+    for (let i = 0; i < leading; i += 1) html += '<div class="day-spacer" aria-hidden="true"></div>';
+    for (let day = 1; day <= days; day += 1) {
+      const date = new Date(year, month, day);
+      const key = isoDate(day);
+      const info = result.perDay[key] || Core.evaluateDay({});
+      const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+      const isToday = now.getFullYear() === year && now.getMonth() === month && now.getDate() === day;
+      const classes = ["day-card", isWeekend ? "weekend" : "", isToday ? "today" : "", info.hasAny ? `is-${info.type}` : "", info.hasAny && !info.complete ? "open" : "", !info.valid ? "invalid" : ""].filter(Boolean).join(" ");
+      let body = '<span class="day-empty">Tocca per inserire</span>';
+      if (info.hasAny) {
+        body = `<span class="day-badge ${info.type === "smart" ? "smart" : ""}">${info.type === "smart" ? "Smart working" : "Ufficio"}</span>`;
+        body += `<div class="stamp-row"><span>Entrata</span><strong>${escapeHtml(info.entry || "--:--")}</strong></div>`;
+        if (info.complete) {
+          const lunchText = info.lunchOut && info.lunchIn ? `${info.lunchOut}–${info.lunchIn}` : "45 min standard";
+          body += `<div class="stamp-row lunch"><span>Pranzo</span><strong>${escapeHtml(lunchText)}</strong></div>`;
+          body += `<div class="stamp-row"><span>Uscita</span><strong>${escapeHtml(info.exit)}</strong></div>`;
+          if (info.valid) {
+            const sign = info.delta > 0 ? "+" : info.delta < 0 ? "−" : "";
+            const cls = info.delta > 0 ? "positive" : info.delta < 0 ? "negative" : "neutral";
+            body += `<div class="day-result ${cls}">${info.delta === 0 ? "Orario completato" : `${sign}${Core.formatMinutes(Math.abs(info.delta))}`}`;
+            if (info.addedExtra) body += `<br>Extra: +${Core.formatMinutes(info.addedExtra)}`;
+            if (info.basketUsed) body += `<br><span class="basket-text">Basket ingresso: ${info.basketUsed} min</span>`;
+            if (info.overBasket) body += `<br><span class="negative">Oltre basket: ${info.overBasket} min</span>`;
+            if (info.earlyEntryIgnored) body += `<br><span class="neutral">Prima delle 08:00: ${info.earlyEntryIgnored} min non conteggiati</span>`;
+            body += "</div>";
+          }
+        } else body += '<div class="day-result open-text">Giornata aperta · uscita da inserire</div>';
+        if (!info.valid) body += `<div class="day-result negative">${escapeHtml(info.errors[0])}</div>`;
+        if (info.note) body += `<div class="note-line" title="${escapeHtml(info.note)}">${escapeHtml(info.note)}</div>`;
+      }
+      const heatAttr = info.complete && info.valid && info.delta ? ` data-balance="${info.delta > 0 ? "pos" : "neg"}" style="--heat:${(0.35 + 0.65 * Math.min(1, Math.abs(info.delta) / 60)).toFixed(2)}"` : "";
+      html += `<button type="button" class="${classes}" data-date="${key}"${heatAttr} aria-label="${dayNames[date.getDay()]} ${day} ${monthNames[month]}"><div class="day-number" data-weekday="${dayNames[date.getDay()].slice(0, 3)}"><span>${day}</span>${isToday ? '<span class="today-dot" title="Oggi">Oggi</span>' : ""}</div>${body}</button>`;
+    }
+    els.grid.innerHTML = html;
+  }
+
+  function openDay(dateKey) {
+    activeDate = dateKey;
+    const date = new Date(`${dateKey}T12:00:00`);
+    els.title.textContent = `${dayNames[date.getDay()]} ${date.getDate()} ${monthNames[date.getMonth()]}`;
+    const row = records[dateKey] || {};
+    els.type.value = row.type === "smart" ? "smart" : "office";
+    els.entry.value = row.entry || "";
+    els.exit.value = row.exit || "";
+    els.lunchOut.value = row.lunchOut || "";
+    els.lunchIn.value = row.lunchIn || "";
+    els.note.value = row.note || "";
+    els.delete.hidden = !records[dateKey];
+    els.error.hidden = true;
+    els.error.textContent = "";
+    applyDayType();
+    updatePreview();
+    els.dialog.showModal();
+    setTimeout(() => els.entry.focus(), 0);
+  }
+
+  function formRecord() {
+    return { type: els.type.value, entry: els.entry.value, exit: els.exit.value, lunchOut: els.lunchOut.value, lunchIn: els.lunchIn.value, note: els.note.value.trim() };
+  }
+  function syncTypeChoice() {
+    document.querySelectorAll("[data-type-choice]").forEach((button) => {
+      const checked = button.dataset.typeChoice === els.type.value;
+      button.setAttribute("aria-checked", String(checked));
+      button.tabIndex = checked ? 0 : -1;
+    });
+    els.form.classList.toggle("is-smart", els.type.value === "smart");
+  }
+  function applyDayType() {
+    syncTypeChoice();
+    const smart = els.type.value === "smart";
+    if (smart) {
+      els.entry.value = "08:00";
+      els.exit.value = "16:45";
+      els.lunchOut.value = "";
+      els.lunchIn.value = "";
+    }
+    [els.entry, els.exit, els.lunchOut, els.lunchIn].forEach((input) => { input.disabled = smart; });
+    $("calculateExit").disabled = smart;
+    $("clearLunch").disabled = smart;
+    document.querySelectorAll("[data-lunch]").forEach((button) => { button.disabled = smart; });
+  }
+  function updatePreview() {
+    const record = formRecord();
+    const info = Core.evaluateDay(record);
+    const calc = Core.calculateEightHourExit(record);
+    els.calcText.textContent = calc ? `Uscita prevista: ${calc}` : "";
+    if (!info.hasAny || !info.entry) {
+      els.preview.textContent = "Inserisci l’entrata per iniziare.";
+      return;
+    }
+    if (!info.valid) {
+      els.preview.textContent = info.errors.join(" ");
+      return;
+    }
+    if (!info.complete) {
+      els.preview.textContent = `Entrata salvabile. Flessibilità usata: ${Core.formatMinutes(info.dailyFlexUsed)}${info.basketRequested ? `; basket richiesto: ${Core.formatMinutes(info.basketRequested)}` : ""}.`;
+      return;
+    }
+    const sign = info.delta > 0 ? "+" : info.delta < 0 ? "−" : "";
+    els.preview.textContent = `Presenza netta: ${Core.formatMinutes(info.workedMinutes)}. Risultato giornaliero: ${sign}${Core.formatMinutes(Math.abs(info.delta))}.${info.lunchAssumed ? " Pausa standard di 45 minuti applicata." : ""}${info.earlyEntryIgnored ? ` I ${info.earlyEntryIgnored} minuti prima delle 08:00 non vengono conteggiati.` : ""}`;
+  }
+
+  els.grid.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-date]");
+    if (card) openDay(card.dataset.date);
+  });
+  document.querySelectorAll("[data-close-dialog]").forEach((button) => button.addEventListener("click", () => button.closest("dialog").close()));
+  [els.entry, els.exit, els.lunchOut, els.lunchIn, els.note].forEach((input) => input.addEventListener("input", updatePreview));
+  els.type.addEventListener("change", () => { applyDayType(); updatePreview(); });
+  document.querySelectorAll("[data-type-choice]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (els.type.value === button.dataset.typeChoice) return;
+      els.type.value = button.dataset.typeChoice;
+      els.type.dispatchEvent(new Event("change"));
+    });
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+      event.preventDefault();
+      const other = document.querySelector(`[data-type-choice]:not([data-type-choice="${button.dataset.typeChoice}"])`);
+      other.click();
+      other.focus();
+    });
+  });
+  document.querySelectorAll("[data-lunch]").forEach((button) => button.addEventListener("click", () => {
+    [els.lunchOut.value, els.lunchIn.value] = button.dataset.lunch.split(",");
+    updatePreview();
+  }));
+  $("clearLunch").addEventListener("click", () => { els.lunchOut.value = ""; els.lunchIn.value = ""; updatePreview(); });
+  $("calculateExit").addEventListener("click", () => {
+    const value = Core.calculateEightHourExit(formRecord());
+    if (!value) { els.entry.focus(); showToast("Inserisci prima l’entrata"); return; }
+    els.exit.value = value;
+    updatePreview();
+  });
+  els.form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const record = formRecord();
+    const info = Core.evaluateDay(record);
+    if (!info.hasAny || !record.entry || !info.valid) {
+      els.error.textContent = !record.entry ? "Inserisci almeno l’orario di entrata." : info.errors.join(" ");
+      els.error.hidden = false;
+      return;
+    }
+    records[activeDate] = record;
+    persist();
+    els.dialog.close();
+    render();
+    showToast(record.exit ? "Giornata salvata" : "Entrata salvata: potrai aggiungere l’uscita più tardi");
+  });
+  els.delete.addEventListener("click", () => {
+    if (!activeDate || !records[activeDate]) return;
+    delete records[activeDate];
+    persist();
+    els.dialog.close();
+    render();
+    showToast("Giornata cancellata");
+  });
+  $("prevMonth").addEventListener("click", () => { shown = new Date(shown.getFullYear(), shown.getMonth() - 1, 1); load(); render(); });
+  $("nextMonth").addEventListener("click", () => { shown = new Date(shown.getFullYear(), shown.getMonth() + 1, 1); load(); render(); });
+  $("todayMonth").addEventListener("click", () => { const now = new Date(); shown = new Date(now.getFullYear(), now.getMonth(), 1); load(); render(); });
+  $("resetMonth").addEventListener("click", () => {
+    if (!Object.keys(records).length) { showToast("Il mese è già vuoto"); return; }
+    if (!window.confirm(`Cancellare tutte le timbrature di ${monthNames[shown.getMonth()]} ${shown.getFullYear()}?`)) return;
+    records = {};
+    localStorage.removeItem(storageKey());
+    render();
+    showToast("Mese azzerato");
+  });
+  $("autoSmartButton").addEventListener("click", openSmartMonthDialog);
+  document.querySelectorAll('input[name="smartWeekday"]').forEach((input) => input.addEventListener("change", updateSmartMonthPreview));
+  $("overwriteSmartMonth").addEventListener("change", updateSmartMonthPreview);
+  els.smartForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const weekdays = selectedSmartWeekdays();
+    if (!weekdays.length) {
+      els.smartError.textContent = "Seleziona almeno un giorno della settimana.";
+      els.smartError.hidden = false;
+      return;
+    }
+    const overwrite = $("overwriteSmartMonth").checked;
+    const dates = matchingSmartDates(weekdays);
+    let applied = 0;
+    let skipped = 0;
+    dates.forEach((date) => {
+      if (records[date] && !overwrite) { skipped += 1; return; }
+      records[date] = { type: "smart", entry: "08:00", exit: "16:45", lunchOut: "", lunchIn: "", note: "" };
+      applied += 1;
+    });
+    localStorage.setItem(SMART_PATTERN_KEY, JSON.stringify(weekdays));
+    persist();
+    els.smartDialog.close();
+    render();
+    showToast(`${applied} giornate Smart inserite${skipped ? ` · ${skipped} già compilate non modificate` : ""}`);
+  });
+  $("exportButton").addEventListener("click", () => {
+    const result = Core.calculateMonth(records);
+    const rows = [["Data", "Tipo", "Entrata", "Uscita pranzo", "Rientro pranzo", "Uscita finale", "Pausa minuti", "Presenza minuti", "Differenza minuti", "Basket ingresso", "Extra", "Nota"]];
+    Object.keys(records).sort().forEach((date) => {
+      const day = result.perDay[date];
+      rows.push([date, day.type === "smart" ? "Smart working" : "Ufficio", day.entry, day.lunchOut, day.lunchIn, day.exit, day.lunchMinutes ?? "", day.workedMinutes ?? "", day.delta ?? "", day.basketUsed, day.addedExtra, day.note]);
+    });
+    const safeCell = (cell) => {
+      let text = String(cell ?? "");
+      if (typeof cell !== "number" && /^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+      return `"${text.replace(/"/g, '""')}"`;
+    };
+    const csv = rows.map((row) => row.map(safeCell).join(";")).join("\r\n");
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `timbrature-${monthKey()}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    showToast("File CSV esportato");
+  });
+
+  const THEME_KEY = "timbrature-semplici-v1:theme";
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", theme === "light" ? "#f5f6f8" : "#0a0d12");
+    const toggle = $("themeToggle");
+    if (toggle) toggle.setAttribute("aria-label", theme === "light" ? "Attiva tema scuro" : "Attiva tema chiaro");
+  }
+  applyTheme(document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark");
+  $("themeToggle").addEventListener("click", () => {
+    const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+    applyTheme(next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (_) {}
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (document.querySelector("dialog[open]")) return;
+    const target = event.target;
+    if (target && (target.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName))) return;
+    if (event.key === "ArrowLeft") { $("prevMonth").click(); event.preventDefault(); }
+    else if (event.key === "ArrowRight") { $("nextMonth").click(); event.preventDefault(); }
+    else if (event.key === "t" || event.key === "T") $("todayMonth").click();
+  });
+
+  /* Chiusura dei dialoghi cliccando sullo sfondo */
+  [els.dialog, els.smartDialog].forEach((dialog) => {
+    dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+  });
+
+  load();
+  render();
+})();
+
+  </script>
+</body>
+</html>
